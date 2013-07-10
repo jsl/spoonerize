@@ -1,20 +1,8 @@
--- Creates a 'spoonerized' sentence from a normal one (with beginning consonants of two words flipped).
--- Justin Leitgeb justin AT stackbuilders.com
--- Jul 10 2013
-
 import System.Random
 import Data.Char (toLower)
 import Data.Array.IO
 import Control.Monad
 import Data.List (sort, intercalate)
-
--- Example run in ghci:
--- λ: main
--- Enter a sentence to spoonerize:
--- Stack Builders' R&D is the best thing in the world
--- Your spoonerized sentence:
--- "back Builders' R&D is the Stest thing in the world"
-
 
 type Sequence    = Int
 type Word        = String

@@ -9,6 +9,16 @@ Silverstein to my kids about 30 times.
 
 This is a work in progress as I experiment with Haskell.
 
+# Usage
+
+Call runghc on Main.hs and enter a sentence:
+
+    $ runghc Main.hs
+    Enter a sentence to spoonerize:
+    One time I had a bunny rabbit.
+    Your spoonerized sentence:
+    "One bime I had a tunny rabbit."
+
 # TODO
 
 * Write tests
