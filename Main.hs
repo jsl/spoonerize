@@ -3,11 +3,11 @@ import Data.Array.IO
 import Control.Monad
 import Data.List (sort)
 
-type Sequence    = Int
-type Word        = String
-type IsSpoonable = Bool
+type Sequence        = Int
+type Word            = String
+type IsSpoonerizable = Bool
 
-data WordInfo = WordInfo Sequence Word IsSpoonable
+data WordInfo = WordInfo Sequence Word IsSpoonerizable
                 deriving (Show)
 
 instance Ord WordInfo where
@@ -51,15 +51,17 @@ isTooShort word = length word <= 1
 hasLeadingVowel :: Word -> Bool
 hasLeadingVowel word = not (null word) && head word `elem` vowels
 
-isSpoonableWord :: Word -> Bool
-isSpoonableWord word = not (isTooShort word) && not (hasLeadingVowel word)
+isSpoonerizableWord :: Word -> Bool
+isSpoonerizableWord word = not (isTooShort word) &&
+                           not (hasLeadingVowel word) &&
+                           not (isAllConsonants word)
 
-markSpoonableWords :: AnnotatedSentence -> AnnotatedSentence
-markSpoonableWords =
-    map (\(WordInfo x y z) -> (WordInfo x y (z && isSpoonableWord y)))
+markSpoonerizableWords :: AnnotatedSentence -> AnnotatedSentence
+markSpoonerizableWords =
+    map (\(WordInfo x y z) -> (WordInfo x y (z && isSpoonerizableWord y)))
 
-spoonableWords :: AnnotatedSentence -> AnnotatedSentence
-spoonableWords = filter (\(WordInfo _ _ isSpoonable) -> isSpoonable)
+spoonerizableWords :: AnnotatedSentence -> AnnotatedSentence
+spoonerizableWords = filter (\(WordInfo _ _ isSpoonerizable) -> isSpoonerizable)
 
 wordBeginning :: String -> String
 wordBeginning = takeWhile isConsonant
@@ -69,6 +71,9 @@ wordEnding = dropWhile isConsonant
 
 isConsonant :: Char -> Bool
 isConsonant l = l `notElem` vowels
+
+isAllConsonants :: Word -> Bool
+isAllConsonants = all isConsonant
 
 swapWordBeginnings :: (Word, Word) -> (Word, Word)
 swapWordBeginnings (wordA, wordB) = (wordBeginning wordB ++ wordEnding wordA,
@@ -87,8 +92,12 @@ substituteWords (oldsentence, toSpoonerizeA, toSpoonerizeB) =
     unwords $ map (\(WordInfo _ word _) -> word) orderedWords
     where
       sequencesToReplace = wordSequenceNumbers [spoonerizedA, spoonerizedB]
-      minusSpoonerized = filter (\(WordInfo seq _ _) -> (seq `notElem` sequencesToReplace)) oldsentence
-      (spoonerizedA, spoonerizedB) = spoonerizeWords(toSpoonerizeA, toSpoonerizeB)
+      minusSpoonerized = filter (\(WordInfo seq _ _) ->
+                                 (seq `notElem` sequencesToReplace)) oldsentence
+
+      (spoonerizedA, spoonerizedB) =
+          spoonerizeWords(toSpoonerizeA, toSpoonerizeB)
+
       newSentence = minusSpoonerized ++ [spoonerizedA, spoonerizedB]
       orderedWords = sort newSentence
 
@@ -96,8 +105,8 @@ main :: IO ()
 main = do
   putStrLn "Enter a sentence to spoonerize:"
   line <- getLine
-  let markedWords = markSpoonableWords $ annotatedSentence line
-  shuffled <- shuffle $ spoonableWords markedWords
+  let markedWords = markSpoonerizableWords $ annotatedSentence line
+  shuffled <- shuffle $ spoonerizableWords markedWords
   let [toSpoonerizeA, toSpoonerizeB] = take 2 shuffled
 
   putStrLn "Your spoonerized sentence: "
