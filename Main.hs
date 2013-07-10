@@ -86,8 +86,8 @@ substituteWords :: ([WordInfo], WordInfo, WordInfo) -> String
 substituteWords (oldsentence, toSpoonerizeA, toSpoonerizeB) =
     unwords $ map (\(WordInfo _ word _) -> word) orderedWords
     where
-      idsToReplace = wordSequenceNumbers [spoonerizedA, spoonerizedB]
-      minusSpoonerized = filter (\(WordInfo seq _ _) -> (seq `notElem` idsToReplace)) oldsentence
+      sequencesToReplace = wordSequenceNumbers [spoonerizedA, spoonerizedB]
+      minusSpoonerized = filter (\(WordInfo seq _ _) -> (seq `notElem` sequencesToReplace)) oldsentence
       (spoonerizedA, spoonerizedB) = spoonerizeWords(toSpoonerizeA, toSpoonerizeB)
       newSentence = minusSpoonerized ++ [spoonerizedA, spoonerizedB]
       orderedWords = sort newSentence
