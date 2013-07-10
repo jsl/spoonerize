@@ -9,7 +9,7 @@ Silverstein to my kids about 30 times.
 
 This is a work in progress as I experiment with Haskell.
 
-# Usage
+## Usage
 
 Call runghc on Main.hs and enter a sentence:
 
@@ -19,26 +19,26 @@ Call runghc on Main.hs and enter a sentence:
     Your spoonerized sentence:
     "One bime I had a tunny rabbit."
 
-# TODO
+## TODO
 
 * Write tests
 * Extract several functions, general cleanup
 
-# Future considerations
+## Future considerations
 
 Other approaches to this problem could be either by part-of-speech
 tagging or statistical / machine learning done on a corpora of
 human-made spoonerisms. These features are not planned at this time.
 
-# Author
+## Author
 
 Justin Leitgeb
 
-# License
+## License
 
 MIT
 
-# References
+## References
 
 * http://en.wikipedia.org/wiki/Spoonerism
 * http://en.wikipedia.org/wiki/Runny_Babbit
