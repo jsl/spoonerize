@@ -80,11 +80,14 @@ spoonerize (WordInfo seqA wordA boolA, WordInfo seqB wordB boolB) =
     (WordInfo seqA newWordA boolA, WordInfo seqB newWordB boolB)
     where (newWordA, newWordB) = swapWordBeginnings(wordA, wordB)
 
+wordSequenceNumbers :: [WordInfo] -> [Int]
+wordSequenceNumbers = map (\(WordInfo sequenceNumber _ _) -> sequenceNumber)
+
 substituteWords :: ([WordInfo], WordInfo, WordInfo) -> String
 substituteWords (oldsentence, toSpoonerizeA, toSpoonerizeB) =
     unwords $ map (\(WordInfo _ word _) -> word) orderedWords
     where
-      idsToReplace = map (\(WordInfo seq _ _) -> seq) [spoonerizedA, spoonerizedB]
+      idsToReplace = wordSequenceNumbers [spoonerizedA, spoonerizedB]
       minusSpoonerized = filter (\(WordInfo seq _ _) -> (seq `notElem` idsToReplace)) oldsentence
       (spoonerizedA, spoonerizedB) = spoonerize(toSpoonerizeA, toSpoonerizeB)
       newSentence = minusSpoonerized ++ [spoonerizedA, spoonerizedB]
