@@ -74,8 +74,8 @@ swapWordBeginnings :: (Word, Word) -> (Word, Word)
 swapWordBeginnings (wordA, wordB) = (wordBeginning wordB ++ wordEnding wordA,
                                      wordBeginning wordA ++ wordEnding wordB)
 
-spoonerize :: (WordInfo, WordInfo) -> (WordInfo, WordInfo)
-spoonerize (WordInfo seqA wordA boolA, WordInfo seqB wordB boolB) =
+spoonerizeWords :: (WordInfo, WordInfo) -> (WordInfo, WordInfo)
+spoonerizeWords (WordInfo seqA wordA boolA, WordInfo seqB wordB boolB) =
     (WordInfo seqA newWordA boolA, WordInfo seqB newWordB boolB)
     where (newWordA, newWordB) = swapWordBeginnings(wordA, wordB)
 
@@ -88,7 +88,7 @@ substituteWords (oldsentence, toSpoonerizeA, toSpoonerizeB) =
     where
       idsToReplace = wordSequenceNumbers [spoonerizedA, spoonerizedB]
       minusSpoonerized = filter (\(WordInfo seq _ _) -> (seq `notElem` idsToReplace)) oldsentence
-      (spoonerizedA, spoonerizedB) = spoonerize(toSpoonerizeA, toSpoonerizeB)
+      (spoonerizedA, spoonerizedB) = spoonerizeWords(toSpoonerizeA, toSpoonerizeB)
       newSentence = minusSpoonerized ++ [spoonerizedA, spoonerizedB]
       orderedWords = sort newSentence
 
