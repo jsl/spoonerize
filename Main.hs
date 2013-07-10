@@ -1,8 +1,7 @@
 import System.Random
-import Data.Char (toLower)
 import Data.Array.IO
 import Control.Monad
-import Data.List (sort, intercalate)
+import Data.List (sort)
 
 type Sequence    = Int
 type Word        = String
