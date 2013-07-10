@@ -15,7 +15,8 @@ instance Ord WordInfo where
   (WordInfo seq1 _ _) `compare` (WordInfo seq2 _ _) = seq1 `compare` seq2
 
 instance Eq WordInfo where
-    (WordInfo seq1 word1 bool1) == (WordInfo seq2 word2 bool2) = seq1 == seq2 && word1 == word2 && bool1 == bool2
+    (WordInfo seq1 word1 bool1) == (WordInfo seq2 word2 bool2) =
+        seq1 == seq2 && word1 == word2 && bool1 == bool2
 
 type AnnotatedSentence = [WordInfo]
 
@@ -37,7 +38,7 @@ shuffle xs = do
   where
     n = length xs
     newArray :: Int -> [a] -> IO (IOArray Int a)
-    newArray n xs =  newListArray (1,n) xs
+    newArray n =  newListArray (1, n)
 
 annotatedSentence :: String -> AnnotatedSentence
 annotatedSentence sent =
@@ -49,29 +50,26 @@ isTooShort :: Word -> Bool
 isTooShort word = length word <= 1
 
 hasLeadingVowel :: Word -> Bool
-hasLeadingVowel word = not (null word) && word !! 0 `elem` vowels
+hasLeadingVowel word = not (null word) && head word `elem` vowels
 
 isSpoonableWord :: Word -> Bool
 isSpoonableWord word = not (isTooShort word) && not (hasLeadingVowel word)
 
 markSpoonableWords :: AnnotatedSentence -> AnnotatedSentence
-markSpoonableWords sent =
-    map (\(WordInfo x y z) -> (WordInfo x y (z && isSpoonableWord(y)))) sent
+markSpoonableWords =
+    map (\(WordInfo x y z) -> (WordInfo x y (z && isSpoonableWord y)))
 
 spoonableWords :: AnnotatedSentence -> AnnotatedSentence
-spoonableWords words = filter (\(WordInfo _ _ isSpoonable) -> (isSpoonable)) words
-
-splitWord :: String -> (String, String)
-splitWord word = undefined
+spoonableWords = filter (\(WordInfo _ _ isSpoonable) -> isSpoonable)
 
 wordBeginning :: String -> String
-wordBeginning word = takeWhile (isConsonant) word
+wordBeginning = takeWhile isConsonant
 
 wordEnding :: String -> String
-wordEnding word = dropWhile (isConsonant) word
+wordEnding = dropWhile isConsonant
 
 isConsonant :: Char -> Bool
-isConsonant l = not $ l `elem` vowels
+isConsonant l = l `notElem` vowels
 
 swapWordBeginnings :: (Word, Word) -> (Word, Word)
 swapWordBeginnings (wordA, wordB) = (wordBeginning wordB ++ wordEnding wordA,
@@ -84,14 +82,13 @@ spoonerize (WordInfo seqA wordA boolA, WordInfo seqB wordB boolB) =
 
 substituteWords :: ([WordInfo], WordInfo, WordInfo) -> String
 substituteWords (oldsentence, toSpoonerizeA, toSpoonerizeB) =
-    intercalate " " stringsOnly
+    unwords $ map (\(WordInfo _ word _) -> word) orderedWords
     where
       idsToReplace = map (\(WordInfo seq _ _) -> seq) [spoonerizedA, spoonerizedB]
-      minusSpoonerized = filter (\(WordInfo seq _ _) -> (not (seq `elem` idsToReplace))) oldsentence
+      minusSpoonerized = filter (\(WordInfo seq _ _) -> (seq `notElem` idsToReplace)) oldsentence
       (spoonerizedA, spoonerizedB) = spoonerize(toSpoonerizeA, toSpoonerizeB)
       newSentence = minusSpoonerized ++ [spoonerizedA, spoonerizedB]
       orderedWords = sort newSentence
-      stringsOnly = map (\(WordInfo _ word _) -> word) orderedWords
 
 main :: IO ()
 main = do
