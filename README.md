@@ -11,10 +11,19 @@ This is a work in progress as I experiment with Haskell.
 
 ## Usage
 
-Call runghc on Main.hs and enter a sentence:
+Install the library using cabal:
+
+    runhaskell Setup.hs configure --user
+    runhaskell Setup.hs build
+    runhaskell install
+
+ Import the library in your program or ghci:
+
+    import Text.Spoonerize (spoonerize)
+
+Call the spoonerize function with a String:
 
     λ: spoonerize "One time I had a bunny rabbit."
-    Your spoonerized sentence:
     "One bime I had a tunny rabbit."
 
 ## TODO
