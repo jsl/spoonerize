@@ -1,0 +1,22 @@
+name:                spoonerize
+version:             0.1.1.0
+synopsis:            A simple Haskell script to create random 'spoonerisms' from an input sentence.
+-- description:
+homepage:            http://github.com/jsl/spoonerize
+license:             MIT
+license-file:        LICENSE
+author:              Justin Leitgeb
+maintainer:          justin@stackbuilders.com
+bug-reports:   	     http://github.com/jsl/spoonerize/issues
+-- copyright:
+category:            Text
+build-type:          Simple
+cabal-version:       >=1.8
+
+source-repository head
+  Type:     git
+  Location: git://github.com/jsl/spoonerize.git
+
+library
+  exposed-modules:     Text.Spoonerize
+  build-depends:       base ==4.5.*, random ==1.0.*, array ==0.4.*

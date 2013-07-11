@@ -1,3 +1,5 @@
+module Text.Spoonerize ( spoonerize ) where
+
 import System.Random
 import Data.Array.IO
 import Control.Monad
@@ -123,13 +125,10 @@ substituteWords (oldsentence, toSpoonerizeA, toSpoonerizeB) =
       newSentence = minusSpoonerized ++ [spoonerizedA, spoonerizedB]
       orderedWords = sort newSentence
 
-main :: IO ()
-main = do
-  putStrLn "Enter a sentence to spoonerize:"
-  line <- getLine
-  let markedWords = markSpoonerizableWords $ annotatedSentence line
-  shuffled <- shuffle $ spoonerizableWords markedWords
-  let [toSpoonerizeA, toSpoonerizeB] = take 2 shuffled
-
-  putStrLn "Your spoonerized sentence: "
-  print $ substituteWords(markedWords, toSpoonerizeA, toSpoonerizeB)
+spoonerize :: String -> IO String
+spoonerize str =
+    let markedWords = markSpoonerizableWords $ annotatedSentence str in
+      do
+        shuffled <- shuffle $ spoonerizableWords markedWords
+        let [toSpoonerizeA, toSpoonerizeB] = take 2 shuffled in
+          return $ substituteWords(markedWords, toSpoonerizeA, toSpoonerizeB)

@@ -13,9 +13,7 @@ This is a work in progress as I experiment with Haskell.
 
 Call runghc on Main.hs and enter a sentence:
 
-    $ runghc Main.hs
-    Enter a sentence to spoonerize:
-    One time I had a bunny rabbit.
+    λ: spoonerize "One time I had a bunny rabbit."
     Your spoonerized sentence:
     "One bime I had a tunny rabbit."
 
