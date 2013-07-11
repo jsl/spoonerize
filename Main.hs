@@ -2,6 +2,7 @@ import System.Random
 import Data.Array.IO
 import Control.Monad
 import Data.List (sort)
+import Data.Char (isLower, toLower, toUpper)
 
 type Sequence        = Int
 type Word            = String
@@ -45,6 +46,12 @@ annotatedSentence sent =
     where sentence   = words sent
           wordTuples = zip3 [1..] sentence $ cycle [True]
 
+caseFunction :: Char -> (Char -> Char)
+caseFunction char = if isLower char then
+                        toLower
+                    else
+                        toUpper
+
 isTooShort :: Word -> Bool
 isTooShort word = length word <= 1
 
@@ -75,9 +82,24 @@ isConsonant l = l `notElem` vowels
 isAllConsonants :: Word -> Bool
 isAllConsonants = all isConsonant
 
+applyCase :: Char -> Char -> Char
+applyCase sourceCharacter destCharacter =
+    (caseFunction sourceCharacter) destCharacter
+
+swapWordCase :: (Word, Word) -> (Word, Word)
+swapWordCase (wordA, wordB) =
+    ([newLtrA] ++ tail wordA,
+     [newLtrB] ++ tail wordB)
+    where firstLtrA = head wordA
+          firstLtrB = head wordB
+          newLtrA   = applyCase firstLtrB firstLtrA
+          newLtrB   = applyCase firstLtrA firstLtrB
+
 swapWordBeginnings :: (Word, Word) -> (Word, Word)
-swapWordBeginnings (wordA, wordB) = (wordBeginning wordB ++ wordEnding wordA,
-                                     wordBeginning wordA ++ wordEnding wordB)
+swapWordBeginnings (wordA, wordB) =
+    (wordBeginning bCaseFlipped ++ wordEnding wordA,
+     wordBeginning aCaseFlipped ++ wordEnding wordB)
+    where (aCaseFlipped, bCaseFlipped) = swapWordCase (wordA, wordB)
 
 spoonerizeWords :: (WordInfo, WordInfo) -> (WordInfo, WordInfo)
 spoonerizeWords (WordInfo seqA wordA boolA, WordInfo seqB wordB boolB) =
